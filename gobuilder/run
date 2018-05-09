@@ -1,0 +1,17 @@
+#!/bin/dash
+
+set -x
+
+echo "Starting builder"
+
+cd /go/src
+go get ./...
+
+while true; do
+  inotifywait -qr -e modify,create,delete,move .
+  if [ -x /go/build/build ]; then
+    /go/build/build
+  else
+    echo No build file
+  fi
+done
